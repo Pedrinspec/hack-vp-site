@@ -1,0 +1,18 @@
+<main class="container">
+  <section class="card">
+    <h1>Login</h1>
+
+    <form [formGroup]="form" (ngSubmit)="entrar()" novalidate>
+      <label for="email">E-mail</label>
+      <input id="email" type="email" formControlName="email" placeholder="seu@email.com" />
+
+      <label for="senha">Senha</label>
+      <input id="senha" type="password" formControlName="senha" placeholder="********" />
+
+      <button type="submit" [disabled]="carregando">{{ carregando ? 'Entrando...' : 'Entrar' }}</button>
+    </form>
+
+    <p class="mensagem" *ngIf="mensagem">{{ mensagem }}</p>
+    <a routerLink="/cadastro">Ainda não possui conta? Cadastrar</a>
+  </section>
+</main>

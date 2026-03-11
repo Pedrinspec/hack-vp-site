@@ -1,0 +1,21 @@
+<main class="container">
+  <section class="card">
+    <h1>Cadastro</h1>
+
+    <form [formGroup]="form" (ngSubmit)="cadastrar()" novalidate>
+      <label for="nome">Nome</label>
+      <input id="nome" type="text" formControlName="nome" placeholder="Seu nome" />
+
+      <label for="email">E-mail</label>
+      <input id="email" type="email" formControlName="email" placeholder="seu@email.com" />
+
+      <label for="senha">Senha</label>
+      <input id="senha" type="password" formControlName="senha" placeholder="********" />
+
+      <button type="submit" [disabled]="carregando">{{ carregando ? 'Salvando...' : 'Cadastrar' }}</button>
+    </form>
+
+    <p class="mensagem" *ngIf="mensagem">{{ mensagem }}</p>
+    <a routerLink="/">Voltar para login</a>
+  </section>
+</main>
