@@ -5,13 +5,13 @@ import { environment } from '../../environments/environment';
 
 export interface LoginPayload {
   email: string;
-  senha: string;
+  password: string;
 }
 
 export interface RegisterPayload {
-  nome: string;
+  name: string;
   email: string;
-  senha: string;
+  password: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -23,6 +23,6 @@ export class AuthService {
   }
 
   cadastrar(payload: RegisterPayload): Observable<unknown> {
-    return this.http.post(`${environment.apiBaseUrl}/usuarios`, payload);
+    return this.http.post(`${environment.apiBaseUrl}/auth/register`, payload);
   }
 }
