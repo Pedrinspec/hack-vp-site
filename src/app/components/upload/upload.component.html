@@ -9,6 +9,11 @@
       {{ carregando ? 'Enviando...' : 'Enviar para API de Upload' }}
     </button>
 
+    <div *ngIf="carregando || progresso > 0" class="progress-bar">
+      <div class="progress-fill" [style.width.%]="progresso"></div>
+      <span>{{ progresso }}%</span>
+    </div>
+
     <p class="mensagem" *ngIf="mensagem">{{ mensagem }}</p>
   </section>
 </main>

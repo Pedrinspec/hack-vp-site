@@ -13,6 +13,7 @@ export class UploadComponent {
   videoSelecionado: File | null = null;
   mensagem = '';
   carregando = false;
+  progresso = 0;
 
   constructor(private readonly uploadService: UploadService) {}
 
@@ -20,6 +21,7 @@ export class UploadComponent {
     const input = event.target as HTMLInputElement;
     this.videoSelecionado = input.files?.[0] ?? null;
     this.mensagem = this.videoSelecionado ? `Vídeo selecionado: ${this.videoSelecionado.name}` : '';
+    this.progresso = 0;
   }
 
   enviarVideo(): void {
@@ -28,15 +30,24 @@ export class UploadComponent {
       return;
     }
 
-    this.carregando = true;
-    this.mensagem = 'Enviando vídeo para processamento...';
+    const file = this.videoSelecionado;
+    const totalPartes = Math.ceil(file.size / this.uploadService.CHUNK_SIZE);
 
-    this.uploadService.uploadVideo(this.videoSelecionado).subscribe({
+    this.carregando = true;
+    this.progresso = 0;
+    this.mensagem = `Iniciando upload de ${totalPartes} parte(s)...`;
+
+    this.uploadService.uploadVideo(file, (parte, total) => {
+      this.progresso = Math.round((parte / total) * 95);
+      this.mensagem = `Enviando parte ${parte} de ${total}...`;
+    }).subscribe({
       next: () => {
-        this.mensagem = 'Upload enviado com sucesso!';
+        this.progresso = 100;
+        this.mensagem = 'Upload realizado com sucesso!';
       },
       error: () => {
-        this.mensagem = 'Falha no upload. Verifique a API de processamento.';
+        this.mensagem = 'Falha no upload. Verifique sua conexão e tente novamente.';
+        this.carregando = false;
       },
       complete: () => {
         this.carregando = false;
