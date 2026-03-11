@@ -1,0 +1,12 @@
+services:
+  frontend:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+      args:
+        API_BASE_URL: ${API_BASE_URL:-http://localhost:8080}
+    image: hack-vp-site:local
+    container_name: hack-vp-site
+    ports:
+      - "${PORT:-80}:80"
+    restart: unless-stopped
