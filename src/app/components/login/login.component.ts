@@ -37,7 +37,7 @@ export class LoginComponent {
     this.mensagem = '';
 
     this.authService.login(this.form.getRawValue()).subscribe({
-      next: () => {
+      next: _res => {
         this.mensagem = 'Login realizado com sucesso!';
         this.router.navigate(['/upload']);
       },
