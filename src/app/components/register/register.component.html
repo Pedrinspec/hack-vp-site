@@ -3,14 +3,14 @@
     <h1>Cadastro</h1>
 
     <form [formGroup]="form" (ngSubmit)="cadastrar()" novalidate>
-      <label for="nome">Nome</label>
-      <input id="nome" type="text" formControlName="nome" placeholder="Seu nome" />
+      <label for="name">Nome</label>
+      <input id="name" type="text" formControlName="name" placeholder="Seu nome" />
 
       <label for="email">E-mail</label>
       <input id="email" type="email" formControlName="email" placeholder="seu@email.com" />
 
-      <label for="senha">Senha</label>
-      <input id="senha" type="password" formControlName="senha" placeholder="********" />
+      <label for="password">Senha</label>
+      <input id="password" type="password" formControlName="password" placeholder="********" />
 
       <button type="submit" [disabled]="carregando">{{ carregando ? 'Salvando...' : 'Cadastrar' }}</button>
     </form>
