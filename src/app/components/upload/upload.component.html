@@ -1,0 +1,14 @@
+<main class="container">
+  <section class="card">
+    <h1>Processamento de Vídeo</h1>
+
+    <label class="file-label" for="video">Selecionar vídeo</label>
+    <input id="video" type="file" accept="video/*" (change)="selecionarVideo($event)" />
+
+    <button type="button" (click)="enviarVideo()" [disabled]="carregando">
+      {{ carregando ? 'Enviando...' : 'Enviar para API de Upload' }}
+    </button>
+
+    <p class="mensagem" *ngIf="mensagem">{{ mensagem }}</p>
+  </section>
+</main>
