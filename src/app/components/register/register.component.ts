@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -12,6 +12,8 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
+  private readonly fb = inject(FormBuilder);
+
   readonly form = this.fb.nonNullable.group({
     nome: ['', [Validators.required, Validators.minLength(2)]],
     email: ['', [Validators.required, Validators.email]],
@@ -21,7 +23,7 @@ export class RegisterComponent {
   mensagem = '';
   carregando = false;
 
-  constructor(private readonly fb: FormBuilder, private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   cadastrar(): void {
     if (this.form.invalid) {
