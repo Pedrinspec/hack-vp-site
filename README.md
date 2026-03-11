@@ -10,7 +10,7 @@ Aplicação Angular simples com:
 Os serviços já estão prontos para chamadas HTTP e podem ser ajustados para o seu backend Java/Spring:
 
 - `POST {apiBaseUrl}/auth/login`
-- `POST {apiBaseUrl}/usuarios`
+- `POST {apiBaseUrl}/auth/register`
 - `POST {apiBaseUrl}/videos/upload`
 
 Altere `src/environments/environment.ts` para apontar para seu backend.
