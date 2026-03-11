@@ -18,7 +18,7 @@ RUN npm run build
 FROM nginx:1.27-alpine
 
 COPY --from=builder /app/dist/hack-vp-site/browser /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY infra/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
