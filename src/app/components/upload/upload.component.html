@@ -2,10 +2,10 @@
   <section class="card">
     <h1>Processamento de Vídeo</h1>
 
-    <label class="file-label" for="video">Selecionar vídeo</label>
-    <input id="video" type="file" accept="video/*" (change)="selecionarVideo($event)" />
+    <label class="file-label" for="videos">Selecionar vídeos</label>
+    <input id="videos" type="file" accept="video/*" multiple (change)="selecionarVideos($event)" />
 
-    <button type="button" (click)="enviarVideo()" [disabled]="carregando">
+    <button type="button" (click)="enviarVideos()" [disabled]="carregando">
       {{ carregando ? 'Enviando...' : 'Enviar para API de Upload' }}
     </button>
 
@@ -15,5 +15,24 @@
     </div>
 
     <p class="mensagem" *ngIf="mensagem">{{ mensagem }}</p>
+
+    <table *ngIf="videos.length > 0">
+      <thead>
+        <tr>
+          <th>Vídeo</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let video of videos">
+          <td>{{ video.file.name }}</td>
+          <td>{{ video.status }}</td>
+          <td>
+            <button *ngIf="video.downloadUrl" (click)="baixarVideo(video.downloadUrl)">Baixar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </section>
 </main>

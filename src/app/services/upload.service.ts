@@ -89,4 +89,8 @@ export class UploadService {
       })
     );
   }
+
+  getDownloadUrl(fileName: string): string {
+    return `${this.base}/download/${fileName}`;
+  }
 }
