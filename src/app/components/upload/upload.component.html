@@ -1,13 +1,15 @@
-<main class="container">
-  <section class="card">
-    <h1>Processamento de Vídeo</h1>
+<main class="upload-page">
+  <header class="topbar">
+    <h1>Página</h1>
+  </header>
 
-    <label class="file-label" for="videos">Selecionar vídeos</label>
-    <input id="videos" type="file" accept="video/*" multiple (change)="selecionarVideos($event)" />
-
-    <button type="button" (click)="enviarVideos()" [disabled]="carregando">
-      {{ carregando ? 'Enviando...' : 'Enviar para API de Upload' }}
-    </button>
+  <section class="upload-card">
+    <div class="upload-controls">
+      <input id="videos" type="file" accept="video/*" multiple (change)="selecionarVideos($event)" />
+      <button type="button" (click)="enviarVideos()" [disabled]="carregando">
+        {{ carregando ? 'enviando...' : 'upload' }}
+      </button>
+    </div>
 
     <div *ngIf="carregando || progresso > 0" class="progress-bar">
       <div class="progress-fill" [style.width.%]="progresso"></div>
@@ -15,21 +17,38 @@
     </div>
 
     <p class="mensagem" *ngIf="mensagem">{{ mensagem }}</p>
+  </section>
 
-    <table *ngIf="videos.length > 0">
+  <section class="videos-card">
+    <h2>videos</h2>
+    <table>
       <thead>
         <tr>
-          <th>Vídeo</th>
-          <th>Status</th>
-          <th>Ações</th>
+          <th>videos</th>
+          <th>status</th>
+          <th>download</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let video of videos">
-          <td>{{ video.file.name }}</td>
-          <td>{{ video.status }}</td>
+        <tr *ngIf="processamentos.length === 0">
+          <td colspan="3" class="empty">Nenhum vídeo processado ainda.</td>
+        </tr>
+        <tr *ngFor="let item of processamentos">
+          <td>{{ item.videoName }}</td>
           <td>
-            <button *ngIf="video.downloadUrl" (click)="baixarVideo(video.downloadUrl)">Baixar</button>
+            <span class="status-badge" [ngClass]="statusClasse(item.status)">
+              {{ item.status }}
+            </span>
+          </td>
+          <td>
+            <button
+              *ngIf="item.downloadUrl"
+              type="button"
+              class="download-btn"
+              (click)="baixarImagens(item.downloadUrl)">
+              baixar
+            </button>
+            <span *ngIf="!item.downloadUrl">-</span>
           </td>
         </tr>
       </tbody>
