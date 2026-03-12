@@ -62,6 +62,9 @@ export class UploadComponent implements OnInit, OnDestroy {
       }).subscribe({
         next: () => {
           video.status = 'Processando';
+          if (!this.pollingSub || this.pollingSub.closed) {
+            this.pollingSub = interval(5000).subscribe(() => this.carregarProcessamentos());
+          }
           this.carregarProcessamentos();
         },
         error: () => {
@@ -79,10 +82,18 @@ export class UploadComponent implements OnInit, OnDestroy {
     });
   }
 
+  private static readonly STATUS_FINAIS = ['processado', 'erro no processamento', 'erro no carregamento'];
+
   carregarProcessamentos(): void {
     this.uploadService.listarProcessamentos().subscribe({
       next: videos => {
         this.processamentos = videos;
+        const todosFinalizados = videos.length > 0 && videos.every(v =>
+          UploadComponent.STATUS_FINAIS.includes(v.videoStatus?.toLowerCase() ?? '')
+        );
+        if (todosFinalizados) {
+          this.pollingSub?.unsubscribe();
+        }
       },
       error: () => {
         this.mensagem = 'Não foi possível atualizar a lista de processamentos.';
