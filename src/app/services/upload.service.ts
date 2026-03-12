@@ -31,6 +31,12 @@ interface ProcessamentoApiResponse {
   zipUrl?: string;
 }
 
+export interface VideoView {
+  uploadId?: string;
+  videoName?: string;
+  videoStatus?: string;
+}
+
 export interface VideoProcessingItem {
   videoName: string;
   status: string;
@@ -62,6 +68,10 @@ export class UploadService {
     return this.http.post<StartUploadResponse>(`${this.base}/start`, body, {
       headers: this.authHeaders(),
     });
+  }
+
+  getDownloadUrl(uploadId: string): string {
+    return `${environment.apiBaseUrl}/api/download/${uploadId}`;
   }
 
   uploadPart(presignedUrl: string, chunk: Blob): Observable<string> {
@@ -106,14 +116,14 @@ export class UploadService {
     );
   }
 
-  listarProcessamentos(): Observable<VideoProcessingItem[]> {
-    return this.http.get<ProcessamentoApiResponse[]>(`${this.base}/videos`, {
+  listarProcessamentos(): Observable<VideoView[]> {
+    return this.http.get<VideoView[]>(`${environment.apiBaseUrl}/api/download/videos?user=${this.authService.getUserId()}`, {
       headers: this.authHeaders()
     }).pipe(
       map(response => response.map(item => ({
-        videoName: item.videoName ?? item.originalFileName ?? item.name ?? 'Sem nome',
-        status: item.status ?? item.processingStatus ?? 'Processando',
-        downloadUrl: item.downloadUrl ?? item.zipUrl
+        videoName: item.videoName ?? 'Sem nome',
+        videoStatus: item.videoStatus ??  'Processando',
+        uploadId: item.uploadId ?? ''
       })))
     );
   }

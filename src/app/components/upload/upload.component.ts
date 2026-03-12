@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, interval } from 'rxjs';
-import { UploadService, VideoProcessingItem } from '../../services/upload.service';
+import { UploadService, VideoProcessingItem, VideoView } from '../../services/upload.service';
 
 interface LocalVideo {
   file: File;
@@ -18,10 +18,11 @@ interface LocalVideo {
 })
 export class UploadComponent implements OnInit, OnDestroy {
   videos: LocalVideo[] = [];
-  processamentos: VideoProcessingItem[] = [];
+  processamentos: VideoView[] = [];
   mensagem = '';
   carregando = false;
   progresso = 0;
+  
 
   private pollingSub?: Subscription;
 
@@ -89,12 +90,13 @@ export class UploadComponent implements OnInit, OnDestroy {
     });
   }
 
-  baixarImagens(url: string): void {
+  baixarImagens(uploadId: string): void {
+    const url = this.uploadService.getDownloadUrl(uploadId);
     window.open(url, '_blank');
   }
 
-  statusClasse(status: string): string {
-    const normalizado = status.toLowerCase();
+  statusClasse(status?: string): string {
+    const normalizado = status?.toLowerCase() ?? '';
 
     if (normalizado.includes('conclu')) {
       return 'status-concluido';

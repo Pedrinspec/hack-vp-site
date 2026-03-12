@@ -40,19 +40,19 @@
           <tr *ngFor="let item of processamentos">
             <td>{{ item.videoName }}</td>
             <td>
-              <span class="status-badge" [ngClass]="statusClasse(item.status)">
-                {{ item.status }}
+              <span class="status-badge" [ngClass]="statusClasse(item.videoStatus)">
+                {{ item.videoStatus }}
               </span>
             </td>
             <td>
               <button
-                *ngIf="item.downloadUrl"
+                *ngIf="item.uploadId"
                 type="button"
                 class="download-btn"
-                (click)="baixarImagens(item.downloadUrl)">
+                (click)="baixarImagens(item.uploadId)">
                 Baixar
               </button>
-              <span *ngIf="!item.downloadUrl">-</span>
+              <span *ngIf="!item.uploadId">-</span>
             </td>
           </tr>
         </tbody>
