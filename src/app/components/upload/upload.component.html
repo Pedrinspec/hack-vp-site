@@ -1,14 +1,16 @@
-<main class="upload-page">
-  <section class="upload-panel">
+<main class="container">
+  <section class="card upload-card">
     <h1>Processamento de Vídeos</h1>
 
     <div class="upload-controls">
+      <label for="videos">Selecione os vídeos</label>
       <input
         id="videos"
         type="file"
         accept="video/*"
         multiple
         (change)="selecionarVideos($event)" />
+
       <button type="button" (click)="enviarVideos()" [disabled]="carregando">
         {{ carregando ? 'Enviando...' : 'Upload' }}
       </button>
