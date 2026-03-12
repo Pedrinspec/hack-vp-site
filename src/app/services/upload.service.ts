@@ -21,6 +21,22 @@ interface PartConfirmRequest {
   eTag: string;
 }
 
+interface ProcessamentoApiResponse {
+  videoName?: string;
+  originalFileName?: string;
+  name?: string;
+  status?: string;
+  processingStatus?: string;
+  downloadUrl?: string;
+  zipUrl?: string;
+}
+
+export interface VideoProcessingItem {
+  videoName: string;
+  status: string;
+  downloadUrl?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class UploadService {
   readonly CHUNK_SIZE = 5 * 1024 * 1024; // 5 MB (mínimo exigido pelo S3 multipart)
@@ -90,7 +106,15 @@ export class UploadService {
     );
   }
 
-  getDownloadUrl(fileName: string): string {
-    return `${this.base}/download/${fileName}`;
+  listarProcessamentos(): Observable<VideoProcessingItem[]> {
+    return this.http.get<ProcessamentoApiResponse[]>(`${this.base}/videos`, {
+      headers: this.authHeaders()
+    }).pipe(
+      map(response => response.map(item => ({
+        videoName: item.videoName ?? item.originalFileName ?? item.name ?? 'Sem nome',
+        status: item.status ?? item.processingStatus ?? 'Processando',
+        downloadUrl: item.downloadUrl ?? item.zipUrl
+      })))
+    );
   }
 }

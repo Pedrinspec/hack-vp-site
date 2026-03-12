@@ -1,13 +1,13 @@
 <main class="container">
-  <section class="card">
-    <h1>Processamento de Vídeo</h1>
+  <section class="card upload-card">
+    <h1>Processamento de Vídeos</h1>
 
-    <label class="file-label" for="videos">Selecionar vídeos</label>
-    <input id="videos" type="file" accept="video/*" multiple (change)="selecionarVideos($event)" />
-
-    <button type="button" (click)="enviarVideos()" [disabled]="carregando">
-      {{ carregando ? 'Enviando...' : 'Enviar para API de Upload' }}
-    </button>
+    <div class="upload-controls">
+      <input id="videos" type="file" accept="video/*" multiple (change)="selecionarVideos($event)" />
+      <button type="button" (click)="enviarVideos()" [disabled]="carregando">
+        {{ carregando ? 'Enviando...' : 'Upload' }}
+      </button>
+    </div>
 
     <div *ngIf="carregando || progresso > 0" class="progress-bar">
       <div class="progress-fill" [style.width.%]="progresso"></div>
@@ -16,23 +16,40 @@
 
     <p class="mensagem" *ngIf="mensagem">{{ mensagem }}</p>
 
-    <table *ngIf="videos.length > 0">
-      <thead>
-        <tr>
-          <th>Vídeo</th>
-          <th>Status</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let video of videos">
-          <td>{{ video.file.name }}</td>
-          <td>{{ video.status }}</td>
-          <td>
-            <button *ngIf="video.downloadUrl" (click)="baixarVideo(video.downloadUrl)">Baixar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-wrapper">
+      <h2>Vídeos</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Vídeo</th>
+            <th>Status</th>
+            <th>Download</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="processamentos.length === 0">
+            <td colspan="3" class="empty">Nenhum vídeo processado ainda.</td>
+          </tr>
+          <tr *ngFor="let item of processamentos">
+            <td>{{ item.videoName }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="statusClasse(item.status)">
+                {{ item.status }}
+              </span>
+            </td>
+            <td>
+              <button
+                *ngIf="item.downloadUrl"
+                type="button"
+                class="download-btn"
+                (click)="baixarImagens(item.downloadUrl)">
+                Baixar
+              </button>
+              <span *ngIf="!item.downloadUrl">-</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 </main>
