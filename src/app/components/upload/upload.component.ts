@@ -1,6 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { UploadService } from '../../services/upload.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription, interval } from 'rxjs';
+import { UploadService, VideoProcessingItem } from '../../services/upload.service';
+
+interface LocalVideo {
+  file: File;
+  status: string;
+  downloadUrl?: string;
+}
 
 @Component({
   selector: 'app-upload',
@@ -9,13 +16,25 @@ import { UploadService } from '../../services/upload.service';
   templateUrl: './upload.component.html',
   styleUrl: './upload.component.css'
 })
-export class UploadComponent {
-  videos: { file: File; status: string; downloadUrl?: string }[] = [];
+export class UploadComponent implements OnInit, OnDestroy {
+  videos: LocalVideo[] = [];
+  processamentos: VideoProcessingItem[] = [];
   mensagem = '';
   carregando = false;
   progresso = 0;
 
+  private pollingSub?: Subscription;
+
   constructor(private readonly uploadService: UploadService) {}
+
+  ngOnInit(): void {
+    this.carregarProcessamentos();
+    this.pollingSub = interval(5000).subscribe(() => this.carregarProcessamentos());
+  }
+
+  ngOnDestroy(): void {
+    this.pollingSub?.unsubscribe();
+  }
 
   selecionarVideos(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -41,20 +60,50 @@ export class UploadComponent {
         this.progresso = Math.round((parte / total) * 95);
       }).subscribe({
         next: () => {
-          video.status = 'Concluído';
-          video.downloadUrl = `${this.uploadService.getDownloadUrl(video.file.name)}`;
+          video.status = 'Processando';
+          this.carregarProcessamentos();
         },
         error: () => {
           video.status = 'Erro';
+          this.mensagem = 'Falha ao enviar um ou mais vídeos.';
         },
         complete: () => {
           this.carregando = this.videos.some(v => v.status === 'Enviando');
+          if (!this.carregando) {
+            this.progresso = 100;
+            this.mensagem = 'Upload concluído. Aguardando processamento dos vídeos.';
+          }
         }
       });
     });
   }
 
-  baixarVideo(url: string): void {
+  carregarProcessamentos(): void {
+    this.uploadService.listarProcessamentos().subscribe({
+      next: videos => {
+        this.processamentos = videos;
+      },
+      error: () => {
+        this.mensagem = 'Não foi possível atualizar a lista de processamentos.';
+      }
+    });
+  }
+
+  baixarImagens(url: string): void {
     window.open(url, '_blank');
+  }
+
+  statusClasse(status: string): string {
+    const normalizado = status.toLowerCase();
+
+    if (normalizado.includes('conclu')) {
+      return 'status-concluido';
+    }
+
+    if (normalizado.includes('erro') || normalizado.includes('falha')) {
+      return 'status-erro';
+    }
+
+    return 'status-processando';
   }
 }
