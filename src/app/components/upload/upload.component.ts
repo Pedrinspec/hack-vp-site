@@ -106,6 +106,29 @@ export class UploadComponent implements OnInit, OnDestroy {
     window.open(url, '_blank');
   }
 
+  podeDownload(status?: string): boolean {
+    return (status?.toLowerCase() ?? '') === 'processado';
+  }
+
+  podeReprocessar(status?: string): boolean {
+    const s = status?.toLowerCase() ?? '';
+    return s === 'carregado' || s === 'erro no processamento' || s === 'erro no carregamento';
+  }
+
+  reprocessarVideo(uploadId: string): void {
+    this.uploadService.reprocess(uploadId).subscribe({
+      next: () => {
+        this.mensagem = 'Reprocessamento solicitado.';
+        if (!this.pollingSub || this.pollingSub.closed) {
+          this.pollingSub = interval(5000).subscribe(() => this.carregarProcessamentos());
+        }
+      },
+      error: () => {
+        this.mensagem = 'Falha ao solicitar reprocessamento.';
+      }
+    });
+  }
+
   statusClasse(status?: string): string {
     const normalizado = status?.toLowerCase() ?? '';
 

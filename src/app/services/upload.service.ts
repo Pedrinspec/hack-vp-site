@@ -116,6 +116,12 @@ export class UploadService {
     );
   }
 
+  reprocess(uploadId: string): Observable<unknown> {
+    return this.http.post(`${this.base}/${uploadId}/reprocess`, {}, {
+      headers: this.authHeaders(),
+    });
+  }
+
   listarProcessamentos(): Observable<VideoView[]> {
     return this.http.get<VideoView[]>(`${environment.apiBaseUrl}/api/download/videos?user=${this.authService.getUserId()}`, {
       headers: this.authHeaders()

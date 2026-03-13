@@ -46,13 +46,20 @@
             </td>
             <td>
               <button
-                *ngIf="item.uploadId"
+                *ngIf="podeDownload(item.videoStatus)"
                 type="button"
                 class="download-btn"
-                (click)="baixarImagens(item.uploadId)">
+                (click)="baixarImagens(item.uploadId!)">
                 Baixar
               </button>
-              <span *ngIf="!item.uploadId">-</span>
+              <button
+                *ngIf="podeReprocessar(item.videoStatus)"
+                type="button"
+                class="reprocess-btn"
+                (click)="reprocessarVideo(item.uploadId!)">
+                Reprocessar
+              </button>
+              <span *ngIf="!podeDownload(item.videoStatus) && !podeReprocessar(item.videoStatus)">-</span>
             </td>
           </tr>
         </tbody>

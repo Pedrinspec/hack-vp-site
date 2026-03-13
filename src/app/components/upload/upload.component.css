@@ -107,6 +107,14 @@ th {
   padding: 8px 12px;
 }
 
+.reprocess-btn {
+  width: auto;
+  padding: 8px 12px;
+  background: #fff3cd;
+  border-color: #ffc107;
+  color: #856404;
+}
+
 @media (max-width: 760px) {
   .upload-card {
     max-width: 100%;
